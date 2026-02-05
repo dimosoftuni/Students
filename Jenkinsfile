@@ -1,26 +1,40 @@
-pipeline{
+pipeline {
     agent any
 
-    stages{
-        stage("Install Dependencies"){
-            steps{
+    stages {
+        stage("Install Dependencies") {
+            steps {
                 bat 'npm install'
             }
         }
-        stage("Testing"){
+
+        stage("Testing") {
             failFast true
-             parallel {
-                stage("Run npm security"){
-                    steps{
+            parallel {
+                stage("Run npm security") {
+                    steps {
                         bat 'npm audit'
                     }
                 }
-                stage("Run UI Tests"){
-                    steps{
+                stage("Run UI Tests") {
+                    steps {
                         bat 'npm test'
                     }
                 }
-             }
+            }
+        }
+
+        stage("Approval for Deployment") {
+            steps {
+                input message: 'Approve deployment to production?',
+                      ok: 'Deploy'
+            }
+        }
+
+        stage("Deploy") {
+            steps {
+                echo "Deploying application..."
+            }
         }
     }
 }
