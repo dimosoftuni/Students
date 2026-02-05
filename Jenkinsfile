@@ -27,7 +27,7 @@ pipeline {
         stage("Approval for Deployment") {
             steps {
                 input message: 'Approve deployment to production?',
-                      ok: 'Deploy'
+                      ok: 'Deploy to render'
             }
         }
 
